@@ -17,7 +17,7 @@ function setup_ssh_keys() {
 }
 
 function setup_pgbouncer() {
-    apt-get -y install pgbouncer
+    apt-get -y install pgbouncer=1.5.4-4
 
     cat > /etc/pgbouncer/pgbouncer.ini <<EOF
 [databases]

@@ -1,5 +1,5 @@
-psql-cluster-testing
-====================
+postgresql-cluster-testing
+==========================
 
 # Purpose
 Set up 3 virtual machines running a corosync/pacemaker cluster with postgresql running in `sync` mode.

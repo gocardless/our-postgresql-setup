@@ -116,6 +116,12 @@ function setup_postgresql() {
     # for pgbouncer
     host       all     postgres 172.28.33.10/32                 trust
     hostssl    all     postgres 172.28.33.10/32                 trust
+    host       all     postgres 172.28.33.11/32                 trust
+    hostssl    all     postgres 172.28.33.11/32                 trust
+    host       all     postgres 172.28.33.12/32                 trust
+    hostssl    all     postgres 172.28.33.12/32                 trust
+    host       all     postgres 172.28.33.13/32                 trust
+    hostssl    all     postgres 172.28.33.13/32                 trust
 EOF
 
     cat > /etc/postgresql/${POSTGRESQL_VERSION}/main/postgresql.conf <<EOF

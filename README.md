@@ -23,6 +23,9 @@ iteration of the tool will be to test adding a VIP to pgBouncer and trying to re
 or
 1.  ``` ./tmux-session.sh start ```
 
+# Further reading
+* [Pacemaker CRM shell Quick Reference](https://github.com/ClusterLabs/pacemaker/blob/master/doc/pcs-crmsh-quick-ref.md)
+
 # References
 * [PostgreSQL](https://www.postgresql.org)
 * [tmux](https://tmux.github.io)

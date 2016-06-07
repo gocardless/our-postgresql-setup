@@ -215,6 +215,7 @@ function build_cluster() {
 
     cat <<EOF | crm configure
 property stonith-enabled=false
+property default-resource-stickiness=0
 primitive PgBouncerVIP ocf:heartbeat:IPaddr2 params ip=172.28.33.9 cidr_netmask=32 op monitor interval=5s meta resource-stickiness=200
 primitive PostgresqlVIP ocf:heartbeat:IPaddr2 params ip=172.28.33.10 cidr_netmask=32 op monitor interval=5s
 primitive Postgresql ocf:heartbeat:pgsql \

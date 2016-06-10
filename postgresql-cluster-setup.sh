@@ -211,8 +211,6 @@ function build_cluster() {
     # setup new postgresql instance that is exactly the same in all boxes
     setup_fresh_postgresql
 
-    # TODO: primitive pgbouncerVIP ocf:heartbeat:IPaddr2 params ip=172.28.33.9 cidr_netmask=32 op monitor interval=5s
-
     cat <<EOF | crm configure
 property stonith-enabled=false
 property default-resource-stickiness=0

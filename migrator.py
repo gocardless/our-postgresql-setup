@@ -82,6 +82,7 @@ def migrate_primary(node):
     cluster_cmd("resource migrate msPostgresql {}".format(node))
     wait_for_primary(node)
     print("{} Migrated to node {}".format(datetime.datetime.now(), node))
+    cluster_cmd("resource unmigrate msPostgresql")
 
 
 def running_on_pgbouncer_vip():

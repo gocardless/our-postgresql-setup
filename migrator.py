@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import datetime
 import os
 import platform
 import re
@@ -15,7 +16,8 @@ PGBOUNCER_PAUSE = "PAUSE"
 PRIMARY_RE = re.compile("Masters: \[ (.*) \]")
 SYNC_REPLICA_RE = re.compile(".*Node (.*):.*Postgresql-data-status.*"
                              "STREAMING\|SYNC.*", re.MULTILINE | re.DOTALL)
-PGVIP_RE = re.compile(".*PgBouncerVIP.*Started (.*)")
+PGBOUNCERVIP_RE = re.compile(".*PgBouncerVIP.*Started (.*)")
+POSTGRESQLVIP_RE = re.compile(".*PostgresqlVIP.*Started (.*)")
 
 
 def run_as(username, cmd):
@@ -64,25 +66,27 @@ def get_cluster_primary_node():
     return None
 
 
-def get_pgbouncer_vip_node():
+def get_vip_node(vip_re):
     output = cluster_cmd("status")
-    m = PGVIP_RE.search(output)
+    m = vip_re.search(output)
     return m.group(1).strip()
 
 
 def wait_for_primary(node):
-    while get_cluster_primary_node() != node:
+    while get_vip_node(POSTGRESQLVIP_RE) != node:
         time.sleep(0.1)
 
 
 def migrate_primary(node):
-    print("Migrating to node {}".format(node))
+    print("{} Migrating to node {}".format(datetime.datetime.now(), node))
     cluster_cmd("resource migrate msPostgresql {}".format(node))
     wait_for_primary(node)
+    print("{} Migrated to node {}".format(datetime.datetime.now(), node))
+    cluster_cmd("resource unmigrate msPostgresql")
 
 
 def running_on_pgbouncer_vip():
-    return get_pgbouncer_vip_node() == hostname()
+    return get_vip_node(PGBOUNCERVIP_RE) == hostname()
 
 
 if __name__ == '__main__':

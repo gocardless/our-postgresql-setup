@@ -69,7 +69,9 @@ def get_cluster_primary_node():
 def get_vip_node(vip_re):
     output = cluster_cmd("status")
     m = vip_re.search(output)
-    return m.group(1).strip()
+    if m is not None:
+        return m.group(1).strip()
+    return None
 
 
 def wait_for_primary(node):
@@ -104,5 +106,8 @@ if __name__ == '__main__':
     if input("Will migrate the resource to node '{}'."
              "\nIs this correct? [y/N]".format(sync_node)).lower() == 'y':
         pgbouncer_cmd("PAUSE")
-        migrate_primary(sync_node)
+        try:
+            migrate_primary(sync_node)
+        except Exception as exc:
+            print(exc)
         pgbouncer_cmd("RESUME")

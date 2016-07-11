@@ -91,9 +91,29 @@ def running_on_pgbouncer_vip():
     return get_vip_node(PGBOUNCERVIP_RE) == hostname()
 
 
+def pgbouncer_active_state():
+    return "active" in pgbouncer_cmd("'SHOW SERVERS'")
+
+
+def wait_for_conn_flush():
+    time_limit = 3
+    start = time.time()
+
+    while pgbouncer_active_state():
+        if time.time()-start > time_limit:
+            return False
+        time.sleep(0.1)
+    return True
+
+
 if __name__ == '__main__':
     os.chdir("/tmp")
     sync_node = get_cluster_sync_node()
+
+    # TODO(nlopes): this serves no purpose yet!
+    migrate_force = False
+    if len(sys.argv) == 2 and sys.argv[1] == '--force':
+        migrate_force = True
 
     if sync_node is None:
         print("Could not find synchronous postgresql node")
@@ -107,7 +127,7 @@ if __name__ == '__main__':
              "\nIs this correct? [y/N]".format(sync_node)).lower() == 'y':
         pgbouncer_cmd("PAUSE")
         try:
-            migrate_primary(sync_node)
+            wait_for_conn_flush() and migrate_primary(sync_node)
         except Exception as exc:
             print(exc)
         pgbouncer_cmd("RESUME")

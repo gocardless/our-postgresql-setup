@@ -72,7 +72,7 @@ function setup_postgresql_repo() {
     echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
     # Setup postgresql repo key
-    apt-get -y install wget ca-certificates
+    apt-get -y install wget ca-certificates ntp
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
     # Update package info
@@ -125,7 +125,7 @@ function setup_postgresql() {
 EOF
 
     cat > /etc/postgresql/${POSTGRESQL_VERSION}/main/postgresql.conf <<EOF
-archive_command = 'cd .'
+archive_command = 'exit 0'
 archive_mode = 'on'
 autovacuum = 'on'
 checkpoint_completion_target = 0.6
@@ -145,13 +145,14 @@ listen_addresses = '*'
 log_autovacuum_min_duration = 0
 log_checkpoints = 'on'
 logging_collector = 'on'
+log_min_messages = DEBUG3
 log_filename = 'postgresql.log'
 log_connections = 'on'
 log_directory = '/var/log/postgresql'
 log_disconnections = 'on'
 log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a '
 log_lock_waits = 'on'
-log_min_duration_statement = 500
+log_min_duration_statement = 0
 log_temp_files = 0
 maintenance_work_mem = '128MB'
 max_connections = 100
@@ -217,10 +218,10 @@ property default-resource-stickiness=100
 primitive PgBouncerVIP ocf:heartbeat:IPaddr2 params ip=172.28.33.9 cidr_netmask=32 op monitor interval=5s meta resource-stickiness=200
 primitive PostgresqlVIP ocf:heartbeat:IPaddr2 params ip=172.28.33.10 cidr_netmask=32 op monitor interval=5s
 primitive Postgresql ocf:heartbeat:pgsql \
-    params pgctl="/usr/lib/postgresql/${POSTGRESQL_VERSION}/bin/pg_ctl" psql="/usr/bin/psql" pgdata="/var/lib/postgresql/${POSTGRESQL_VERSION}/main/" start_opt="-p 5432" rep_mode="sync" node_list="pg01 pg02 pg03" primary_conninfo_opt="keepalives_idle=60 keepalives_interval=5 keepalives_count=5" master_ip="172.28.33.10" repuser="postgres" tmpdir="/var/lib/postgresql/${POSTGRESQL_VERSION}/tmp" config="/etc/postgresql/${POSTGRESQL_VERSION}/main/postgresql.conf" logfile="/var/log/postgresql/postgresql-crm.log" restore_command="cp /data/archive/%f %p" \
+    params pgctl="/usr/lib/postgresql/${POSTGRESQL_VERSION}/bin/pg_ctl" psql="/usr/bin/psql" pgdata="/var/lib/postgresql/${POSTGRESQL_VERSION}/main/" start_opt="-p 5432" rep_mode="sync" node_list="pg01 pg02 pg03" primary_conninfo_opt="keepalives_idle=60 keepalives_interval=5 keepalives_count=5" master_ip="172.28.33.10" repuser="postgres" tmpdir="/var/lib/postgresql/${POSTGRESQL_VERSION}/tmp" config="/etc/postgresql/${POSTGRESQL_VERSION}/main/postgresql.conf" logfile="/var/log/postgresql/postgresql-crm.log" restore_command="exit 0" \
     op start timeout="60s" interval="0s" on-fail="restart" \
-    op monitor timeout="60s" interval="4s" on-fail="restart" \
-    op monitor timeout="60s" interval="3s" on-fail="restart" role="Master" \
+    op monitor timeout="60s" interval="2s" on-fail="restart" \
+    op monitor timeout="60s" interval="1s" on-fail="restart" role="Master" \
     op promote timeout="60s" interval="0s" on-fail="restart" \
     op demote timeout="60s" interval="0s" on-fail="stop" \
     op stop timeout="60s" interval="0s" on-fail="block" \

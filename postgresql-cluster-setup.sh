@@ -201,6 +201,8 @@ EOF
     service pacemaker start
 }
 
+# TODO: have a way to customise op monitor intervals during cluster turnup
+# Currently they're set to the values we use during deliberate migrations
 function build_cluster() {
     printf "Waiting for cluster to have quorum"
     while [ -z "$(crm status | grep '3 Nodes configured')" ]; do

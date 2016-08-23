@@ -10,6 +10,7 @@ import sys
 import time
 
 
+PGBOUNCER_CONNECT_TIMEOUT = 3
 PGBOUNCER_RESUME = "RESUME"
 PGBOUNCER_PAUSE = "PAUSE"
 
@@ -39,7 +40,7 @@ def hostname():
 
 
 def pgbouncer_cmd(cmd):
-    pgbouncer_cmd = "psql -p 6432 -U pgbouncer pgbouncer -c {}".format(cmd)
+    pgbouncer_cmd = "psql -p 6432 postgresql://pgbouncer@/pgbouncer?connect_timeout={} -c {}".format(PGBOUNCER_CONNECT_TIMEOUT, cmd)
     return run_as("postgres", pgbouncer_cmd)
 
 
@@ -55,7 +56,9 @@ def get_cluster_sync_node():
     output = cluster_mon_cmd("-1 -Afr")
     m = SYNC_REPLICA_RE.search(output)
     # sync node will be the first one if there are more than one
-    return m.group(1).strip()
+    if m is not None:
+        return m.group(1).strip()
+    return None
 
 
 def get_cluster_primary_node():
@@ -120,8 +123,13 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if not running_on_pgbouncer_vip():
-        print("You must run this script on the node with the PgBouncerVIP")
+        print("You must run this script on the node with the PgBouncerVIP: {}".
+              format(get_vip_node(PGBOUNCERVIP_RE)))
         sys.exit(1)
+
+    print("Make sure you have the following command ready in another window\n"
+          " in the server where this script is running:\n\n"
+          " sudo -u postgres psql -p 6432 -U pgbouncer pgbouncer -c 'RESUME'\n\n")
 
     if input("Will migrate the resource to node '{}'."
              "\nIs this correct? [y/N]".format(sync_node)).lower() == 'y':

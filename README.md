@@ -61,6 +61,12 @@ Once the cluster is up, you have two options:
     1. It is safe to ignore the `Make sure you have the following command ready...` prompt. This is aimed at cases where you'd want to quickly re-enable traffic, and doesn't matter when running locally.
 4. Assuming everything went well, the primary will migrate to the synchronous replica, and the clients won't have received any connection resets.
 
+# I have a question!
+
+We're happy to receive questions as issues on this repo, so don't be shy!
+
+It's hard to know exactly what documentation/guidance is useful to people, so we'll use the questions we answer to improve this README and link out to more places you can read up on the technologies we're using.
+
 # Further reading
 * [Pacemaker CRM shell Quick Reference](https://github.com/ClusterLabs/pacemaker/blob/master/doc/pcs-crmsh-quick-ref.md)
 

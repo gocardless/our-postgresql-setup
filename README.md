@@ -1,5 +1,5 @@
-postgresql-cluster-testing
-==========================
+our-postgresql-setup
+====================
 
 # Purpose
 Set up 3 virtual machines running a corosync/pacemaker cluster with postgresql running in `sync` mode.
@@ -11,7 +11,7 @@ iteration of the tool will be to test adding a VIP to pgBouncer and trying to re
 # Dependencies
 1. [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
 2. [Vagrant](http://www.vagrantup.com/downloads.html)
-3. ``` git clone https://github.com/gocardless/psql-cluster-testing.git ```
+3. ``` git clone https://github.com/gocardless/our-postgresql-setup.git ```
 4. [Optional] [tmux](https://tmux.github.io)
 
 # Getting started

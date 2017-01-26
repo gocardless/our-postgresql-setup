@@ -8,11 +8,17 @@ function setup-session() {
     tmux split-window
     tmux split-window
     tmux select-layout even-horizontal
-    tmux select-window -t pg:0
+    # Handle tmux configs where windows aren't 0-indexed
+    local tmux_first_window="$(tmux display-message -p '#I')"
+    tmux select-window -t pg:"$tmux_first_window"
     sleep 3 # pause for a bit or the keys below may be sent before the user shell inits
-    tmux send-keys -t pg:0.0 C-m "vagrant up pg01 && vagrant ssh pg01" C-m
-    tmux send-keys -t pg:0.1 C-m "vagrant up pg02 && vagrant ssh pg02" C-m
-    tmux send-keys -t pg:0.2 C-m "vagrant up pg03 && vagrant ssh pg03" C-m
+    # Handle tmux configs where panes aren't 0-indexed
+    local tmux_pane_1="$(tmux list-panes | cut -d':' -f1 | sed -n '1p')"
+    local tmux_pane_2="$(tmux list-panes | cut -d':' -f1 | sed -n '2p')"
+    local tmux_pane_3="$(tmux list-panes | cut -d':' -f1 | sed -n '3p')"
+    tmux send-keys -t pg:"${tmux_first_window}"."${tmux_pane_1}" C-m "vagrant up pg01 && vagrant ssh pg01" C-m
+    tmux send-keys -t pg:"${tmux_first_window}"."${tmux_pane_2}" C-m "vagrant up pg02 && vagrant ssh pg02" C-m
+    tmux send-keys -t pg:"${tmux_first_window}"."${tmux_pane_3}" C-m "vagrant up pg03 && vagrant ssh pg03" C-m
     tmux attach-session -t pg
 }
 

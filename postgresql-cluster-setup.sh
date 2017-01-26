@@ -182,6 +182,9 @@ function setup_cluster() {
     cp /vagrant/corosync/corosync.conf /etc/corosync/corosync.conf
     cp /vagrant/corosync/authkey /etc/corosync/authkey
 
+    # Install our patched version of the pgsql resource
+    cp /vagrant/resource_agents/pgsql /usr/lib/ocf/resource.d/heartbeat/pgsql
+
     # Make sure corosync can start
     cat > /etc/default/corosync <<EOF
 START=yes

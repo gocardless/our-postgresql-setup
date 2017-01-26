@@ -58,7 +58,7 @@ Once the cluster is up, you have two options:
 1. Ensure clients are connected to the PgBouncerVIP.
 2. Run `/vagrant/migrator.py` on the node that has the PgBouncerVIP (you can find out where the PgBouncerVIP is by viewing the cluster status).
 3. Follow the prompts.
-    i. It is safe to ignore the `Make sure you have the following command ready...` prompt. This is aimed at cases where you'd want to quickly re-enable traffic, and doesn't matter when running locally.
+    1. It is safe to ignore the `Make sure you have the following command ready...` prompt. This is aimed at cases where you'd want to quickly re-enable traffic, and doesn't matter when running locally.
 4. Assuming everything went well, the primary will migrate to the synchronous replica, and the clients won't have received any connection resets.
 
 # Further reading

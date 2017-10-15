@@ -9,7 +9,7 @@ It helps you quickly spin up a 3-node cluster of PostgreSQL, managed by Pacemake
 
 It's intended as a playground for us, and a learning resource that we wanted to share with the community.
 
-You can hear more about how the cluster works in our talk - Zero-downtime Postgres upgrades (link coming after talk is given).
+You can hear more about how the cluster works in our talk - [Zero-downtime Postgres upgrades](https://www.youtube.com/watch?v=SAkNBiZzEX8).
 
 # What's in the cluster?
 

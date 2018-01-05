@@ -198,6 +198,9 @@ service {
 }
 EOF
 
+    # Make sure pacemaker starts on boot (Corosync's start priority is 19 so set pacemaker higher)
+    sudo update-rc.d pacemaker defaults 20 01
+
     # start corosync / pacemaker
     service corosync start
     # TODO: check output of corosync-cfgtool -s says "no faults"

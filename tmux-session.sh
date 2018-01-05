@@ -23,6 +23,10 @@ function setup-session() {
 }
 
 if [ "$ARG" == "start" ]; then
+    if ! vagrant box list | grep -q "^ubuntu/trusty64" ; then
+        echo "Installing ubuntu/trusty64 box..."
+        vagrant box add ubuntu/trusty64
+    fi
     (tmux new-session -d -s pg -n cluster && setup-session) || tmux attach -t pg
 elif [ "$ARG" == "stop" ]; then
     echo "Stopping all VMs..."

@@ -1,6 +1,8 @@
 our-postgresql-setup
 ====================
 
+**ARCHIVED**: This configuration is no longer used by GoCardless, see the replacement at https://github.com/gocardless/stolon-pgbouncer
+
 # Overview
 
 This repo is an extracted version of how we run PostgreSQL clusters at GoCardless.

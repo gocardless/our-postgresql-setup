@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PG01="172.28.33.11"
 PG02="172.28.33.12"
@@ -197,6 +197,9 @@ service {
     ver: 1
 }
 EOF
+
+    # Make sure pacemaker starts on boot (Corosync's start priority is 19 so set pacemaker higher)
+    sudo update-rc.d pacemaker defaults 20 01
 
     # start corosync / pacemaker
     service corosync start
